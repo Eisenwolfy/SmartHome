@@ -283,28 +283,6 @@ class Room:
 
 
 #CREATING NEW CLASSES
-'''class DeviceFactory:
-    registry = {
-        "lamp": SmartLamp,
-        "speaker": SmartSpeaker,
-        "thermostat": SmartThermostat,
-        "vacuum": SmartVacuumCleaner,
-        "vacuum_cleaner": SmartVacuumCleaner,
-        "purifier": SmartAirPurifier,
-        "air_purifier": SmartAirPurifier
-        }
-
-    @classmethod
-    def create(cls, device_type, index, mods=None):
-        if device_type not in cls.registry:
-            raise ValueError(f"Unknown device type: {device_type}")
-
-        device = cls.registry[device_type].create_default(index)
-
-        if mods:
-            device.apply_mods(mods)
-
-        return device'''
 class DeviceFactory:
     registry = {
         "lamp": SmartLamp,
@@ -330,5 +308,6 @@ class DeviceFactory:
             device.name = mods['name']
         elif not getattr(device, 'name', None):
             device.name = f"{device_type.capitalize()} {index}"
+
 
         return device
