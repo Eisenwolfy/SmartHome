@@ -3,7 +3,7 @@ import psycopg2
 DB_PARAMS = {
     "dbname": "postgres",
     "user": "postgres",
-    "password": "192837",
+    "password": "put your password here",
     "host": "127.0.0.1",
     "port": "5432"
 }
@@ -34,4 +34,5 @@ def clear_database():
 
 
 if __name__ == "__main__":
+
     clear_database()
