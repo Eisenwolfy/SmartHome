@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --bg: #f4f7f6;
+            --primary: #4a90e2;
+            --dark: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body { font-family: 'Segue UI', sans-serif; margin: 0; display: flex; background: var(--bg); }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--dark);
+            color: white;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #3e4f5f;
+        }
+
+        .nav-links {
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #bdc3c7;
+            text-decoration: none;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #34495e;
+            color: white;
+        }
+
+        .nav-item i { width: 20px; }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-microchip"></i> Smart Home
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('rooms')">
+                <i class="fas fa-door-open"></i> Rooms
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('devices')">
+                <i class="fas fa-plug"></i> Devices
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('stats')">
+                <i class="fas fa-chart-line"></i> Statistics
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+
+        <section id="dashboard" class="page-section active">
+    <h1>Welcome Back!</h1>
+    <div class="card">
+        <h3>System Status: <span style="color: green;">Online</span></h3>
+        <p>Manage your smart home devices below.</p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3 class="toggle-header" onclick="toggleList('workingDevices')">✅ Working Devices</h3>
+        <ul id="workingDevices" style="display:none; list-style:none; padding-left:0; margin-top:10px;"></ul>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3 class="toggle-header" onclick="toggleList('offlineDevices')">❌ Offline Devices</h3>
+        <ul id="offlineDevices" style="display:none; list-style:none; padding-left:0; margin-top:10px;"></ul>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3 class="toggle-header" onclick="toggleList('userMods')">🛠️ User Mods</h3>
+        <button id="createModBtn" style="display:none; margin-top:10px;" onclick="createUserMod()">➕ Create Mod</button>
+        <ul id="userMods" style="display:none; list-style:none; padding-left:0; margin-top:10px;"></ul>
+    </div>
+
+
+        </section>
+
+        <style>
+.toggle-title {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin: 8px 0;
+    color: #333;
+}
+
+.toggle-list {
+    display: none;
+    list-style: none;
+    padding-left: 15px;
+    font-size: 0.85rem;
+    color: #555;
+}
+.toggle-list li {
+    padding: 3px 0;
+}
+ </style>
+
+<script>
+
+
+    </script>
+
+        <section id="rooms" class="page-section">
+
+<h1>Room Management</h1>
+
+<div class="card">
+
+<h3>Create Room</h3>
+
+<input id="roomInput"
+placeholder="Enter room name"
+style="padding:10px;width:60%;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;">
+
+<button onclick="createRoom()">Create</button>
+
+<hr>
+
+<h3>Rooms</h3>
+<ul id="roomList" style="list-style:none;padding:0;"></ul>
+
+<hr>
+
+<div id="devicesPanel" style="display:none">
+
+<h3 id="roomTitle"></h3>
+
+<ul id="deviceList" style="list-style:none;padding:0;margin-top:15px;"></ul>
+
+<p style="color:#888;margin-top:10px;">
+
+</p>
+
+</div>
+
+</div>
+        </section>
+
+
+
+        <section id="devices" class="page-section">
+    <h1>Device Management</h1>
+    <div class="card">
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input id="deviceNameInput" placeholder="Device name" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+
+            <select id="deviceTypeSelect" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                <option value="">Type</option>
+                <option value="lamp">Lamp</option>
+                <option value="speaker">Speaker</option>
+                <option value="thermostat">Thermostat</option>
+                <option value="vacuum">Vacuum Cleaner</option>
+                <option value="purifier">Air Purifier</option>
+            </select>
+
+            <select id="deviceRoomSelect" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                <option value="">Select room</option>
+            </select>
+
+            <button onclick="createDeviceAPI()" style="background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer;">Add</button>
+        </div>
+
+        <hr>
+        <ul id="allDevicesList" style="list-style:none; padding:0;"></ul>
+    </div>
+        </section>
+
+
+
+
+
+        <section id="stats" class="page-section">
+    <h1>Device Data </h1>
+
+    <div class="card">
+        <button onclick="run24hSimulation()">
+            ▶ Run Simulation
+        </button>
+
+        <button onclick="loadStats()">
+            🔄 Refresh Stats
+        </button>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>Device Stats</h3>
+        <ul id="statsList"></ul>
+    </div>
+        </section>
+
+
+    </div>
+
+    <script>
+
+let rooms = JSON.parse(localStorage.getItem("rooms")) || [];
+let globalDevicesArray = [];
+let activeRoom = null;
+
+const API_BASE = "http://127.0.0.1:8000";
+
+
+function showPage(pageId){
+    document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+
+    if(pageId === 'dashboard' || pageId === 'devices') fetchDevices();
+    if(pageId === 'stats') loadStats();
+}
+
+
+
+async function fetchDevices() {
+    try {
+        const res = await fetch(`${API_BASE}/devices`);
+        const data = await res.json();
+        globalDevicesArray = Object.values(data);
+
+
+        renderDashboard();
+        renderDevices();
+        renderRoomDevices();
+    } catch (err) {
+        console.error("Error in device loading:", err);
+    }
+}
+
+
+
+async function createDeviceAPI() {
+    const nameInput = document.getElementById("deviceNameInput");
+    const typeSelect = document.getElementById("deviceTypeSelect");
+    const roomSelect = document.getElementById("deviceRoomSelect");
+
+    const name = nameInput.value.trim();
+    const type = typeSelect.value;
+    const room = roomSelect.value;
+
+    if(!name || !type || !room) return alert("Fill all gaps!");
+
+
+    try {
+
+        const res = await fetch(`${API_BASE}/devices/create/${type}?name=${encodeURIComponent(name)}`, { method: "POST" });
+        const data = await res.json();
+
+        if(res.ok) {
+
+            const mapping = JSON.parse(localStorage.getItem("device_rooms") || "{}");
+            mapping[data.device.id] = room;
+            localStorage.setItem("device_rooms", JSON.stringify(mapping));
+
+            nameInput.value = "";
+            fetchDevices();
+        }
+    } catch (e) { alert("Error API: " + e); }
+}
+
+
+async function togglePower(id, currentPower) {
+    const action = currentPower ? "turn_off" : "turn_on";
+    await fetch(`${API_BASE}/devices/${id}/${action}`, { method: "POST" });
+    fetchDevices();
+}
+
+
+async function updateParam(id, paramName, value) {
+    const mods = {};
+    mods[paramName] = parseFloat(value);
+
+    await fetch(`${API_BASE}/devices/${id}/update`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(mods)
+    });
+    fetchDevices();
+}
+
+
+
+function renderDashboard() {
+    const workingList = document.getElementById("workingDevices");
+    const offlineList = document.getElementById("offlineDevices");
+    workingList.innerHTML = "";
+    offlineList.innerHTML = "";
+
+    globalDevicesArray.forEach(dev => {
+        const li = document.createElement("li");
+        li.style.cssText = "padding:10px; background:#f9f9f9; margin-bottom:5px; border-radius:5px; display:flex; justify-content:space-between; align-items:center;";
+        li.innerHTML = `
+            <span><strong>${dev.name}</strong></span>
+            <button onclick="togglePower(${dev.id}, ${dev.power})">${dev.power ? "🔴 Off" : "🟢 On"}</button>
+        `;
+        dev.power ? workingList.appendChild(li) : offlineList.appendChild(li);
+    });
+}
+
+function renderDevices() {
+    const list = document.getElementById("allDevicesList");
+    list.innerHTML = "";
+
+    globalDevicesArray.forEach(d => {
+        const li = document.createElement("li");
+        li.className = "card";
+        li.style.marginBottom = "15px";
+
+        let controls = "";
+        if (d.type === 'lamp') {
+            controls = `<label>Brightness: ${d.brightness}</label>
+                        <input type="range" value="${d.brightness}" onchange="updateParam(${d.id}, 'brightness', this.value)">`;
+        } else if (d.type === 'speaker') {
+            controls = `<label>Volume: ${d.volume}</label>
+                        <input type="range" value="${d.volume}" onchange="updateParam(${d.id}, 'volume', this.value)">`;
+        } else if (d.type === 'thermostat') {
+            controls = `<label>Temperature: ${d.temperature}°C</label>
+                        <input type="range" min="10" max="35" value="${d.temperature}" onchange="updateParam(${d.id}, 'temperature', this.value)">`;
+        }
+
+        li.innerHTML = `
+            <div style="display:flex; justify-content:space-between;">
+                <strong>🔌 ${d.name}</strong>
+                <span style="font-size:0.8rem; color:#888;">${d.type.toUpperCase()}</span>
+            </div>
+            <div style="margin-top:10px;">${controls}</div>
+        `;
+        list.appendChild(li);
+    });
+}
+
+
+function createRoom(){
+    const input = document.getElementById("roomInput");
+    if(!input.value.trim()) return;
+    rooms.push({ name: input.value.trim() });
+    input.value = "";
+    saveRooms();
+}
+
+function renderRooms(){
+    const list = document.getElementById("roomList");
+    if(!list) return;
+    list.innerHTML = "";
+    rooms.forEach((room, i) => {
+        const li = document.createElement("li");
+        li.style.cssText = "display:flex; justify-content:space-between; align-items:center; padding:10px; background:#eee; margin-bottom:5px; border-radius:5px;";
+
+        li.innerHTML = `
+            <span onclick="openRoom(${i})" style="cursor:pointer; flex-grow:1;">🏠 ${room.name}</span>
+            <div style="display:flex; gap:15px;">
+                <i class="fas fa-edit" onclick="renameRoom(${i})" style="cursor:pointer; color:#4a90e2;" title="Rename"></i>
+                <i class="fas fa-trash" onclick="deleteRoom(${i})" style="cursor:pointer; color:#e74c3c;" title="Delete"></i>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+    updateDeviceRoomSelect();
+}
+
+function renameRoom(i) {
+    const oldName = rooms[i].name;
+    const newName = prompt("Write a new name:", oldName);
+
+    if (newName && newName.trim() !== "" && newName !== oldName) {
+        const cleanName = newName.trim();
+
+        rooms[i].name = cleanName;
+
+        const mapping = JSON.parse(localStorage.getItem("device_rooms") || "{}");
+        for (let devId in mapping) {
+            if (mapping[devId] === oldName) {
+                mapping[devId] = cleanName;
+            }
+        }
+        localStorage.setItem("device_rooms", JSON.stringify(mapping));
+
+        saveRooms();
+        fetchDevices();
+    }
+}
+
+function deleteRoom(i) {
+    const roomName = rooms[i].name;
+    if (!confirm(`Are you sure that you want to delete "${roomName}"?`)) return;
+
+    const mapping = JSON.parse(localStorage.getItem("device_rooms") || "{}");
+    for (let devId in mapping) {
+        if (mapping[devId] === roomName) delete mapping[devId];
+    }
+    localStorage.setItem("device_rooms", JSON.stringify(mapping));
+
+    rooms.splice(i, 1);
+    saveRooms();
+
+    if (activeRoom === i) {
+        activeRoom = null;
+        document.getElementById("devicesPanel").style.display = "none";
+    }
+}
+
+
+
+
+function openRoom(i){
+    activeRoom = i;
+    document.getElementById("devicesPanel").style.display = "block";
+    document.getElementById("roomTitle").innerText = "Devices in " + rooms[i].name;
+    renderRoomDevices();
+}
+
+function renderRoomDevices(){
+    const list = document.getElementById("deviceList");
+    if(!list || activeRoom === null) return;
+    list.innerHTML = "";
+
+    const roomName = rooms[activeRoom].name;
+    const mapping = JSON.parse(localStorage.getItem("device_rooms") || "{}");
+
+
+    const roomDevices = globalDevicesArray.filter(d => mapping[d.id] === roomName);
+
+    roomDevices.forEach(d => {
+        const li = document.createElement("li");
+        li.innerHTML = `🔌 ${d.name} (${d.power ? 'On' : 'Off'})`;
+        list.appendChild(li);
+    });
+}
+
+function updateDeviceRoomSelect(){
+    const select = document.getElementById("deviceRoomSelect");
+    if(!select) return;
+    select.innerHTML = "<option value=''>Pick a room</option>";
+    rooms.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.name; opt.innerText = r.name;
+        select.appendChild(opt);
+    });
+}
+
+function saveRooms(){
+    localStorage.setItem("rooms", JSON.stringify(rooms));
+    renderRooms();
+}
+
+function toggleList(id) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById("createModBtn");
+
+    if(el.style.display === "none") {
+        el.style.display = "block";
+        if(btn) btn.style.display = "inline-block";
+    } else {
+        el.style.display = "none";
+        if(btn) btn.style.display = "none";
+    }
+
+    if(id === "userMods") renderUserMods();
+}
+
+//MODS LIST
+let userMods = JSON.parse(localStorage.getItem("user_mods") || "[]");
+
+function renderUserMods() {
+    const list = document.getElementById("userMods");
+    if(!list) return;
+    list.innerHTML = "";
+
+    userMods.forEach((mod, i) => {
+        const li = document.createElement("li");
+        li.style.cssText = "padding:8px; margin-bottom:5px; background:#f9f9f9; border-radius:5px; display:flex; justify-content:space-between; align-items:center;";
+        li.innerHTML = `
+            <span>${mod.name}</span>
+            <div style="display:flex; gap:10px;">
+                <button onclick="runUserMod(${i})">▶ Run</button>
+                <button onclick="deleteUserMod(${i})">❌ Delete</button>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function createUserMod() {
+    const name = prompt("Enter mod name:");
+    if(!name) return;
+
+    const configs = globalDevicesArray.map(dev => {
+        const c = { id: dev.id, power: dev.power };
+        if(dev.brightness !== undefined) c.brightness = dev.brightness;
+        if(dev.volume !== undefined) c.volume = dev.volume;
+        if(dev.temperature !== undefined) c.temperature = dev.temperature;
+        return c;
+    });
+
+    userMods.push({ name, configs });
+    localStorage.setItem("user_mods", JSON.stringify(userMods));
+    renderUserMods();
+}
+
+async function runUserMod(index) {
+    const mod = userMods[index];
+    if(!mod) return;
+
+    for(let cfg of mod.configs) {
+        await updateParam(cfg.id, 'brightness', cfg.brightness ?? 0);
+        await updateParam(cfg.id, 'volume', cfg.volume ?? 0);
+        await updateParam(cfg.id, 'temperature', cfg.temperature ?? 0);
+        if(cfg.power !== undefined) await togglePower(cfg.id, !cfg.power);
+    }
+
+    alert(`Mod "${mod.name}" applied`);
+}
+
+function deleteUserMod(index) {
+    if(!confirm("Delete this mod?")) return;
+    userMods.splice(index, 1);
+    localStorage.setItem("user_mods", JSON.stringify(userMods));
+    renderUserMods();
+}
+
+
+//
+
+renderRooms();
+fetchDevices();
+showPage("dashboard");
+
+
+
+
+async function runScenario(name) {
+    try {
+        const res = await fetch(`${API_BASE}/scenarios/run/${encodeURIComponent(name)}`, {
+            method: "POST"
+        });
+        if (res.ok) {
+            console.log(`Scenario "${name}" is active`);
+            await fetchDevices();
+        } else {
+            alert("Scenario error");
+        }
+    } catch (err) {
+        console.error("Scenario run error:", err);
+    }
+}
+
+
+async function createManualScenario() {
+    const scenarioName = prompt("What is the name of the scenario?");
+    if (!scenarioName) return;
+
+    const configs = globalDevicesArray.map(dev => {
+        const config = { id: dev.id, power: dev.power };
+
+        if (dev.brightness !== undefined) config.brightness = dev.brightness;
+        if (dev.volume !== undefined) config.volume = dev.volume;
+        if (dev.temperature !== undefined) config.temperature = dev.temperature;
+        if (dev.charge !== undefined) config.charge = dev.charge;
+
+        return config;
+    });
+
+    try {
+        const res = await fetch(`${API_BASE}/scenarios/save`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: scenarioName, configs: configs })
+        });
+
+        if (res.ok) {
+            alert(`Scenario "${scenarioName}" is saved it DB!`);
+        }
+    } catch (err) {
+        console.error("Save scenario error:", err);
+    }
+}
+
+//hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+async function load24hStats() {
+    const labels = [];
+    const datasetsTemp = [];
+    const datasetsCharge = [];
+
+    for (let dev of globalDevicesArray) {
+        try {
+            const res = await fetch(`${API_BASE}/devices/${dev.id}/stats`);
+            const stats = await res.json();
+            if (!stats.length) continue;
+
+            const tempData = stats.map(s => s.temperature || 0).reverse();
+            const chargeData = stats.map(s => s.charge || 0).reverse();
+            const timeLabels = stats.map(s => s.time.split(" ")[1]).reverse();
+
+            if (labels.length === 0) labels.push(...timeLabels);
+
+            datasetsTemp.push({
+                label: dev.name,
+                data: tempData,
+                borderColor: randomColor(),
+                fill: false,
+            });
+
+            datasetsCharge.push({
+                label: dev.name,
+                data: chargeData,
+                borderColor: randomColor(),
+                fill: false,
+            });
+
+        } catch (err) {
+            console.error("Error loading stats:", err);
+        }
+    }
+
+    renderChart("tempChart", labels, datasetsTemp, "Temperature (°C)");
+    renderChart("chargeChart", labels, datasetsCharge, "Charge / Brightness");
+}
+
+function renderChart(canvasId, labels, datasets, label) {
+    const ctx = document.getElementById(canvasId).getContext("2d");
+    if (window[canvasId + "Instance"]) window[canvasId + "Instance"].destroy();
+
+    window[canvasId + "Instance"] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: label }
+            },
+            interaction: { mode: 'index', intersect: false },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
+function randomColor() {
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
+}
+
+
+//SIMULATION
+
+        async function run24hSimulation() {
+    alert("Simulation started (wait 5-10 sec)");
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        await loadStats();
+
+        alert("Simulation finished");
+    } catch (err) {
+        console.error(err);
+    }
+}
+async function loadStats() {
+    const statsList = document.getElementById("statsList");
+    statsList.innerHTML = "";
+
+    for (let dev of globalDevicesArray) {
+        try {
+            const res = await fetch(`${API_BASE}/devices/${dev.id}/stats`);
+            const stats = await res.json();
+
+            if (stats.length === 0) continue;
+
+            const last = stats[0];
+
+            const li = document.createElement("li");
+            li.innerHTML = `
+    <strong>${dev.name}</strong><br>
+    🌡 Temp: ${round(last.temperature)}°C |
+    💡 Brightness: ${round(last.brightness)} |
+    🔋 Charge: ${round(last.charge)}
+`;
+
+
+            statsList.appendChild(li);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
+
+        function round(val) {
+    if (val === undefined || val === null) return "-";
+    return Number(val).toFixed(1);
+}
+
+
+
+    </script>
+
+</body>
+</html>
