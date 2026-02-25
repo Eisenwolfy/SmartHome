@@ -26,11 +26,13 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 
 ## Installation & Usage
 
-1. Configure PostgreSQL and create a database
-2. Set environment variables in `.env`
+1. Configure PostgreSQL and create a database.
+2. Set environment variables in `.env`, `.env.example` is an example for your `.env` file.
 3. Reset database (optional):
    ```bash
    python db_reset.py
+4. Run `sh_main.py`
+5. Open `index.html`
 
 
 ## Project Structure
