@@ -24,17 +24,6 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 
 ---
 
-## Installation & Usage
-
-1. Configure PostgreSQL and create a database.
-2. Set environment variables in `.env`, `.env.example` is an example for your `.env` file.
-3. Reset database (optional):
-   ```bash
-   python db_reset.py
-4. Run `sh_main.py`
-5. Open `index.html`
-
-
 ## Project Structure
 
 1. `sh_core.py` – defines classes for all devices.  
@@ -45,3 +34,15 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 6. `sh_api.py` – handles API logic and communication between backend and frontend.  
 7. `sh_main.py` – starts the FastAPI server and manages all API routes.  
 8. `index.html` – frontend dashboard for interacting with the smart home system.
+
+---
+
+## Installation & Usage
+
+1. Configure PostgreSQL and create a database.
+2. Set environment variables in `.env`, `.env.example` is an example for your `.env` file.
+3. Reset database (optional):
+   ```bash
+   python db_reset.py
+4. Run `sh_main.py`
+5. Open `index.html`
