@@ -6,7 +6,7 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 
 ## Features
 
-- Real-time device simulation (temperature, brightness, charge, CO2 levels, etc.)
+- Real-time device simulation (temperature, brightness, charge, etc.)
 - Device management: turn on/off, adjust brightness, volume, temperature
 - Room management and device assignment
 - Save and run **scenarios** and **custom user mods**
@@ -31,3 +31,15 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 3. Reset database (optional):
    ```bash
    python db_reset.py
+
+
+## Project Structure
+
+1. `sh_core.py` – defines classes for all devices.  
+2. `sh_errors.py` – defines special error types.  
+3. `sh_db.py` – creates the database containing information about all devices, rooms, and scenarios.  
+4. `db_reset.py` – resets the database if needed (optional).  
+5. `work_simulation.py` – simulates the behavior of all devices.  
+6. `sh_api.py` – handles API logic and communication between backend and frontend.  
+7. `sh_main.py` – starts the FastAPI server and manages all API routes.  
+8. `index.html` – frontend dashboard for interacting with the smart home system.
