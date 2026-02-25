@@ -35,7 +35,6 @@ Smart Home OS is a **modern smart home management platform** that lets you contr
 7. `sh_main.py` – starts the FastAPI server and manages all API routes.  
 8. `index.html` – frontend dashboard for interacting with the smart home system.
 9. `.env.example` - example of your `.env` file.
-10. 
 
 ---
 
