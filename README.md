@@ -1,5 +1,4 @@
 # Smart Home OS
-
 Smart Home OS is a **modern smart home management platform** that lets you control, monitor, and simulate devices in real-time—all from a sleek web dashboard.
 
 ---
